@@ -1,0 +1,263 @@
+"use client"
+
+import { useState, useRef, useEffect } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card } from "@/components/ui/card"
+
+const beforeAfterCases = {
+  implants: [
+    {
+      before: "/missing-tooth-before-dental-implant.jpg",
+      after: "/perfect-smile-after-dental-implant.jpg",
+      title: "Single Tooth Implant",
+      description: "Complete restoration with natural-looking results",
+    },
+    {
+      before: "/multiple-missing-teeth-before-implants.jpg",
+      after: "/full-smile-after-multiple-implants.jpg",
+      title: "Multiple Implants",
+      description: "Full arch restoration for confident smiling",
+    },
+    {
+      before: "/edentulous-jaw-before-all-on-4.jpg",
+      after: "/perfect-teeth-after-all-on-4-implants.jpg",
+      title: "All-on-4 Implants",
+      description: "Complete smile transformation in one day",
+    },
+  ],
+  veneers: [
+    {
+      before: "/discolored-stained-teeth-before-veneers.jpg",
+      after: "/bright-white-perfect-smile-after-veneers.jpg",
+      title: "Hollywood Smile",
+      description: "Porcelain veneers for a stunning transformation",
+    },
+    {
+      before: "/chipped-uneven-teeth-before-veneers.jpg",
+      after: "/perfect-aligned-teeth-after-veneers.jpg",
+      title: "Smile Makeover",
+      description: "Natural-looking veneers for a beautiful smile",
+    },
+    {
+      before: "/gapped-teeth-before-veneers.jpg",
+      after: "/closed-gap-perfect-smile-after-veneers.jpg",
+      title: "Gap Closure",
+      description: "Seamless veneer application for gap correction",
+    },
+  ],
+  fullMouth: [
+    {
+      before: "/severely-damaged-teeth-before-full-mouth-reconstru.jpg",
+      after: "/perfect-complete-smile-after-full-mouth-design.jpg",
+      title: "Complete Reconstruction",
+      description: "Full mouth rehabilitation with implants and crowns",
+    },
+    {
+      before: "/worn-teeth-before-full-mouth-restoration.jpg",
+      after: "/placeholder.svg?height=400&width=400",
+      title: "Full Mouth Restoration",
+      description: "Comprehensive treatment for total smile renewal",
+    },
+  ],
+  general: [
+    {
+      before: "/placeholder.svg?height=400&width=400",
+      after: "/placeholder.svg?height=400&width=400",
+      title: "Orthodontic Treatment",
+      description: "Teeth alignment for a perfect bite",
+    },
+    {
+      before: "/placeholder.svg?height=400&width=400",
+      after: "/placeholder.svg?height=400&width=400",
+      title: "Teeth Whitening",
+      description: "Professional whitening for a brighter smile",
+    },
+    {
+      before: "/placeholder.svg?height=400&width=400",
+      after: "/placeholder.svg?height=400&width=400",
+      title: "Composite Fillings",
+      description: "Natural-looking tooth restoration",
+    },
+  ],
+}
+
+interface BeforeAfterCardProps {
+  before: string
+  after: string
+  title: string
+  description: string
+}
+
+function BeforeAfterCard({ before, after, title, description }: BeforeAfterCardProps) {
+  const [sliderPosition, setSliderPosition] = useState(50)
+  const [isDragging, setIsDragging] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleMove = (clientX: number) => {
+    if (!containerRef.current) return
+
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
+    const percent = Math.max(0, Math.min((x / rect.width) * 100, 100))
+    setSliderPosition(percent)
+  }
+
+  const handleMouseDown = () => setIsDragging(true)
+
+  const handleMouseUp = () => setIsDragging(false)
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return
+    handleMove(e.clientX)
+  }
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (e.touches[0]) {
+      handleMove(e.touches[0].clientX)
+    }
+  }
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove)
+      window.addEventListener("mouseup", handleMouseUp)
+      window.addEventListener("touchmove", handleTouchMove)
+      window.addEventListener("touchend", handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("mouseup", handleMouseUp)
+      window.removeEventListener("touchmove", handleTouchMove)
+      window.removeEventListener("touchend", handleMouseUp)
+    }
+  }, [isDragging])
+
+  return (
+    <Card className="group overflow-hidden border-2 transition-all hover:border-primary hover:shadow-lg">
+      <div
+        ref={containerRef}
+        className="relative aspect-[4/3] cursor-ew-resize select-none overflow-hidden bg-muted"
+        onMouseDown={handleMouseDown}
+        onTouchStart={() => setIsDragging(true)}
+      >
+        {/* After image (full) */}
+        <img
+          src={after || "/placeholder.svg"}
+          alt={`After ${title}`}
+          className="absolute inset-0 h-full w-full object-cover"
+          draggable={false}
+        />
+
+        {/* Before image (clipped) */}
+        <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}>
+          <img
+            src={before || "/placeholder.svg"}
+            alt={`Before ${title}`}
+            className="absolute inset-0 h-full w-full object-cover"
+            draggable={false}
+          />
+        </div>
+
+        {/* Slider line and handle */}
+        <div className="absolute top-0 bottom-0 w-1 bg-white shadow-lg" style={{ left: `${sliderPosition}%` }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-xl">
+            <svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Labels */}
+        <div className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
+          Before
+        </div>
+        <div className="absolute right-3 top-3 rounded-full bg-primary/90 px-3 py-1 text-xs font-semibold text-primary-foreground backdrop-blur-sm">
+          After
+        </div>
+
+        {/* Instruction overlay */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <p className="text-sm text-white">Drag to compare</p>
+        </div>
+      </div>
+
+      <div className="p-4">
+        <h3 className="text-balance font-semibold text-foreground">{title}</h3>
+        <p className="mt-1 text-pretty text-sm text-muted-foreground">{description}</p>
+      </div>
+    </Card>
+  )
+}
+
+export function BeforeAfterSection() {
+  return (
+    <section id="before-after" className="bg-background py-20 md:py-32">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="mx-auto mb-12 max-w-2xl text-center md:mb-16">
+          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            Real Transformations
+          </h2>
+          <p className="mt-4 text-pretty text-lg text-muted-foreground leading-relaxed">
+            See the life-changing results our patients have achieved with our expert dental care
+          </p>
+        </div>
+
+        <Tabs defaultValue="implants" className="w-full">
+          <TabsList className="mx-auto mb-8 grid w-full max-w-2xl grid-cols-2 gap-2 bg-muted p-2 md:grid-cols-4">
+            <TabsTrigger value="implants" className="text-sm md:text-base">
+              Implants
+            </TabsTrigger>
+            <TabsTrigger value="veneers" className="text-sm md:text-base">
+              Veneers
+            </TabsTrigger>
+            <TabsTrigger value="fullMouth" className="text-sm md:text-base">
+              Full Mouth
+            </TabsTrigger>
+            <TabsTrigger value="general" className="text-sm md:text-base">
+              General
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="implants" className="mt-8">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {beforeAfterCases.implants.map((case_, index) => (
+                <BeforeAfterCard key={index} {...case_} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="veneers" className="mt-8">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {beforeAfterCases.veneers.map((case_, index) => (
+                <BeforeAfterCard key={index} {...case_} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="fullMouth" className="mt-8">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {beforeAfterCases.fullMouth.map((case_, index) => (
+                <BeforeAfterCard key={index} {...case_} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="general" className="mt-8">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {beforeAfterCases.general.map((case_, index) => (
+                <BeforeAfterCard key={index} {...case_} />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-12 text-center">
+          <p className="text-sm text-muted-foreground">
+            All images are from real patient cases. Individual results may vary.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
