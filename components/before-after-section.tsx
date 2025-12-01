@@ -15,14 +15,14 @@ const beforeAfterCases = {
     {
       before: "/new/before-after/cus03b-implant.jpg",
       after: "/new/before-after/cus03a-implant.jpg",
-      title: "Multiple Implants",
+      title: "All-on-4 Implants",
       description: "Full arch restoration for confident smiling",
     },
     {
       before: "/new/before-after/cus07b-implant.jpg",
       after: "/new/before-after/cus07a-implant.jpg",
-      title: "All-on-4 Implants",
-      description: "Complete smile transformation in one day",
+      title: "One Day Implant",
+      description: "Complete tooth replacement in a single visit - remove hopelessness teeth and restore function",
     },
   ],
   veneers: [

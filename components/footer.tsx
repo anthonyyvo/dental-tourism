@@ -17,6 +17,9 @@ export function Footer() {
                 <span className="text-xs text-muted-foreground">Premium Care</span>
               </div>
             </div>
+             <p className="text-md font-bold text-muted-foreground leading-relaxed">
+              Your healthy smile is our passion!
+            </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your trusted partner for world-class dental care in Vietnam. Transform your smile with confidence.
             </p>
@@ -107,17 +110,17 @@ export function Footer() {
           <div>
             <h3 className="mb-4 text-sm font-semibold text-foreground">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>123 Nguyen Hue Boulevard</li>
+              <li>187 Dien Bien Phu, Tan Dinh Ward</li>
               <li>District 1, Ho Chi Minh City</li>
               <li>Vietnam</li>
               <li className="pt-2">
                 <a href="tel:+842812345678" className="transition-colors hover:text-primary">
-                  +84 (28) 1234 5678
+                  +84 909 979 042
                 </a>
               </li>
               <li>
-                <a href="mailto:info@edendental.vn" className="transition-colors hover:text-primary">
-                  info@edendental.vn
+                <a href="mailto:support@nhakhoaeden.vn" className="transition-colors hover:text-primary">
+                  support@nhakhoaeden.vn
                 </a>
               </li>
             </ul>
