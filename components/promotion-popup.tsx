@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 
 export function PromotionPopup() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +18,11 @@ export function PromotionPopup() {
   })
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
     // Show popup after 5 seconds on initial load
     const initialTimer = setTimeout(() => {
       setIsOpen(true)
@@ -45,7 +51,7 @@ export function PromotionPopup() {
     setIsOpen(false)
   }
 
-  if (!isOpen) return null
+  if (!isMounted || !isOpen) return null
 
   return (
     <>

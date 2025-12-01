@@ -9,70 +9,74 @@ import { useState, useEffect, useCallback } from "react"
 
 const doctors = [
   {
-    name: "Dr. Nguyen Van Minh",
+    name: "Dr. Vo Minh Hoai An",
     image: "/images/2-20-282-29.jpg",
-    specialty: "Implantology & Prosthodontics",
+    specialty: "Implantology - Periodontics & Prosthodontics ",
     qualifications: [
       "DDS - University of Medicine Ho Chi Minh City",
       "Master in Dental Implantology",
       "International Dental Implant Association Member",
+      "Certificate in Oral Surgery, University of Marseille - France",
+      "Implant training at New York University & Columbia University - USA"
     ],
-    experience: "15+ years in dental implants and full mouth reconstruction",
+    experience: "12+ years in dental implants and full mouth reconstruction",
+  },
+    {
+    name: "Dr. Nguyen Thuy Phuong Uyen",
+    image: "/images/3.jpg",
+    specialty: "Orthodontics & Full Mouth Rehabilitation",
+    qualifications: [
+      "DDS - University of Medicine Ho Chi Minh City",
+      "Advanced Training in Prosthodontics",
+      "Invisalign Certified Provider",
+      "Certificate in Orthodontics",
+      "Vietnamese Orthodontic Association Board Member",
+    ],
+    experience: "12+ years in complex full mouth smile transformations & orthodontics & Invisalign",
   },
   {
-    name: "Dr. Tran Minh Hoang",
+    name: "Dr. Phan Thanh Phong",
     image: "/images/5.jpg",
     specialty: "Cosmetic Dentistry & Veneers",
     qualifications: [
-      "DDS - Hanoi Medical University",
-      "Certificate in Aesthetic Dentistry",
-      "American Academy of Cosmetic Dentistry Member",
-    ],
-    experience: "12+ years specializing in porcelain veneers and smile design",
+      "DDS - University of Medicine Ho Chi Minh City",
+      "Certificate in Dental Implantology",
+      "Advanced Training in Aesthetic Dentistry",],
+    experience: "5+ years specializing in porcelain veneers and smile design",
   },
+
   {
-    name: "Dr. Le Thi Thanh",
-    image: "/images/3.jpg",
-    specialty: "Full Mouth Rehabilitation",
-    qualifications: [
-      "DDS - University of Medicine and Pharmacy",
-      "Advanced Training in Prosthodontics",
-      "Vietnamese Dental Association Board Member",
-    ],
-    experience: "18+ years in complex full mouth smile transformations",
-  },
-  {
-    name: "Dr. Pham Quoc Bao",
+    name: "Dr. Le Thanh Son",
     image: "/images/4.jpg",
-    specialty: "General & Preventive Dentistry",
+    specialty: "Implantology & Prosthodontics",
     qualifications: [
       "DDS - Ho Chi Minh City University of Medicine",
-      "Certificate in Endodontics",
+      "Certificate in Implantology",
       "Continuing Education in Modern Dental Techniques",
     ],
-    experience: "10+ years in comprehensive dental care and root canal therapy",
+    experience: "10+ years in comprehensive dental care",
   },
   {
-    name: "Dr. Vo Thi Thao Trang",
+    name: "Dr. Le Thao Trang",
     image: "/images/6-1.jpg",
     specialty: "Orthodontics & Smile Alignment",
     qualifications: [
-      "DDS - University of Medicine and Pharmacy",
+      "DDS - Can Tho University of Medicine and Pharmacy",
       "Master in Orthodontics",
       "Invisalign Certified Provider",
     ],
-    experience: "9+ years in orthodontic treatment and invisible braces",
+    experience: "5+ years in orthodontic treatment and invisible braces",
   },
   {
-    name: "Dr. Nguyen Thi Thanh Trang",
+    name: "Dr. Phan Kim Vy",
     image: "/images/7.jpg",
-    specialty: "Pediatric & Family Dentistry",
+    specialty: "Endodontic & Prosthodontic Dentistry",
     qualifications: [
-      "DDS - Hanoi Medical University",
-      "Specialization in Pediatric Dentistry",
-      "Vietnamese Pediatric Dental Association Member",
+      "DDS - University of Medicine Ho Chi Minh City",
+      "Specialization in Endodontic Dentistry",
+      "Certificate in Prosthodontics",
     ],
-    experience: "11+ years providing gentle care for patients of all ages",
+    experience: "8+ years providing gentle care for patients of all ages",
   },
 ]
 
@@ -312,8 +316,8 @@ export function DoctorsSection() {
 
         <div className="mt-12 text-center">
           <p className="text-muted-foreground text-balance">
-            All our doctors are registered with the Vietnamese Dental Association and maintain international standards
-            of care
+            Our doctors are registered with the American Dental Association and maintain international standards
+            of care and continue learning through advanced training programs worldwide.
           </p>
         </div>
       </div>

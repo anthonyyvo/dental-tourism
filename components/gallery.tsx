@@ -1,27 +1,27 @@
 export function Gallery() {
   const images = [
     {
-      url: "/modern-dental-clinic.png",
+      url: "/new/customer01.jpg",
       alt: "Modern clinic interior",
     },
     {
-      url: "/dental-implant-before-and-after-smile-transformati.jpg",
+      url: "/new/customer01-1.jpg",
       alt: "Dental implant results",
     },
     {
-      url: "/professional-dentist-examining-patient-with-digita.jpg",
+      url: "/new/customer01-2.jpg",
       alt: "Professional dental care",
     },
     {
-      url: "/porcelain-veneers-smile-transformation-closeup.jpg",
+      url: "/new/customer02.jpg",
       alt: "Veneer transformation",
     },
     {
-      url: "/happy-patient-smiling-after-dental-treatment.jpg",
+      url: "/new/customer03.jpg",
       alt: "Happy patient",
     },
     {
-      url: "/dental-team-in-modern-clinic-vietnam.jpg",
+      url: "/new/customer04.jpg",
       alt: "Our dental team",
     },
   ]

@@ -7,74 +7,75 @@ import { Card } from "@/components/ui/card"
 const beforeAfterCases = {
   implants: [
     {
-      before: "/missing-tooth-before-dental-implant.jpg",
-      after: "/perfect-smile-after-dental-implant.jpg",
+      before: "/new/before-after/cus06b-implant.jpg",
+      after: "/new/before-after/cus06a-implant.jpg",
       title: "Single Tooth Implant",
       description: "Complete restoration with natural-looking results",
     },
     {
-      before: "/multiple-missing-teeth-before-implants.jpg",
-      after: "/full-smile-after-multiple-implants.jpg",
+      before: "/new/before-after/cus03b-implant.jpg",
+      after: "/new/before-after/cus03a-implant.jpg",
       title: "Multiple Implants",
       description: "Full arch restoration for confident smiling",
     },
     {
-      before: "/edentulous-jaw-before-all-on-4.jpg",
-      after: "/perfect-teeth-after-all-on-4-implants.jpg",
+      before: "/new/before-after/cus07b-implant.jpg",
+      after: "/new/before-after/cus07a-implant.jpg",
       title: "All-on-4 Implants",
       description: "Complete smile transformation in one day",
     },
   ],
   veneers: [
     {
-      before: "/discolored-stained-teeth-before-veneers.jpg",
-      after: "/bright-white-perfect-smile-after-veneers.jpg",
+            before: "/new/before-after/cus08b-smile.jpg",
+      after: "/new/before-after/cus08a-smile.jpg",
+
       title: "Hollywood Smile",
       description: "Porcelain veneers for a stunning transformation",
     },
     {
-      before: "/chipped-uneven-teeth-before-veneers.jpg",
-      after: "/perfect-aligned-teeth-after-veneers.jpg",
+     before: "/new/before-after/cus04b-smile.jpg",
+      after: "/new/before-after/cus04a-smile.jpg",
       title: "Smile Makeover",
       description: "Natural-looking veneers for a beautiful smile",
     },
     {
-      before: "/gapped-teeth-before-veneers.jpg",
-      after: "/closed-gap-perfect-smile-after-veneers.jpg",
+      before: "/new/before-after/cus01b-smile-design.jpg",
+      after: "/new/before-after/cus01a-smile-design.jpg",
       title: "Gap Closure",
       description: "Seamless veneer application for gap correction",
     },
   ],
   fullMouth: [
     {
-      before: "/severely-damaged-teeth-before-full-mouth-reconstru.jpg",
-      after: "/perfect-complete-smile-after-full-mouth-design.jpg",
+      before: "/new/before-after/cus02b-smile-design.jpg",
+      after: "/new/before-after/cus02a-smile-design.jpg",
       title: "Complete Reconstruction",
       description: "Full mouth rehabilitation with implants and crowns",
     },
     {
-      before: "/worn-teeth-before-full-mouth-restoration.jpg",
-      after: "/placeholder.svg?height=400&width=400",
+      before: "/new/before-after/cus09b-full.jpg",
+      after: "/new/before-after/cus09a-full.jpg",
       title: "Full Mouth Restoration",
       description: "Comprehensive treatment for total smile renewal",
     },
   ],
   general: [
+    // {
+    //   before: "/placeholder.svg?height=400&width=400",
+    //   after: "/placeholder.svg?height=400&width=400",
+    //   title: "Orthodontic Treatment",
+    //   description: "Teeth alignment for a perfect bite",
+    // },
     {
-      before: "/placeholder.svg?height=400&width=400",
-      after: "/placeholder.svg?height=400&width=400",
-      title: "Orthodontic Treatment",
-      description: "Teeth alignment for a perfect bite",
-    },
-    {
-      before: "/placeholder.svg?height=400&width=400",
-      after: "/placeholder.svg?height=400&width=400",
+      before: "/new/before-after/cus11b-general.jpg",
+      after: "/new/before-after/cus11a-general.jpg",
       title: "Teeth Whitening",
       description: "Professional whitening for a brighter smile",
     },
     {
-      before: "/placeholder.svg?height=400&width=400",
-      after: "/placeholder.svg?height=400&width=400",
+            before: "/new/before-after/cus10b-general.jpg",
+      after: "/new/before-after/cus10a-general.jpg",
       title: "Composite Fillings",
       description: "Natural-looking tooth restoration",
     },
@@ -91,7 +92,10 @@ interface BeforeAfterCardProps {
 function BeforeAfterCard({ before, after, title, description }: BeforeAfterCardProps) {
   const [sliderPosition, setSliderPosition] = useState(50)
   const [isDragging, setIsDragging] = useState(false)
+  const [isHovering, setIsHovering] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number | null>(null)
+  const directionRef = useRef<1 | -1>(1) // 1 for right, -1 for left
 
   const handleMove = (clientX: number) => {
     if (!containerRef.current) return
@@ -117,6 +121,37 @@ function BeforeAfterCard({ before, after, title, description }: BeforeAfterCardP
     }
   }
 
+  // Auto-animate slider
+  useEffect(() => {
+    const animate = () => {
+      if (!isDragging && !isHovering) {
+        setSliderPosition((prev) => {
+          let newPosition = prev + directionRef.current * 0.5
+          
+          // Reverse direction at boundaries
+          if (newPosition >= 100) {
+            directionRef.current = -1
+            newPosition = 100
+          } else if (newPosition <= 0) {
+            directionRef.current = 1
+            newPosition = 0
+          }
+          
+          return newPosition
+        })
+      }
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isDragging, isHovering])
+
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove)
@@ -140,6 +175,8 @@ function BeforeAfterCard({ before, after, title, description }: BeforeAfterCardP
         className="relative aspect-[4/3] cursor-ew-resize select-none overflow-hidden bg-muted"
         onMouseDown={handleMouseDown}
         onTouchStart={() => setIsDragging(true)}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
         {/* After image (full) */}
         <img

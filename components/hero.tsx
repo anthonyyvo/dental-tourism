@@ -15,7 +15,7 @@ export function Hero() {
                 Transform Your Smile at Eden Dental
               </h1>
               <p className="text-pretty text-lg text-muted-foreground leading-relaxed md:text-xl">
-                Experience premium dental tourism in the heart of Vietnam. Save up to 70% on world-class dental
+                Experience premium dental tourism in the heart of Vietnam - Ho Chi Minh City. Save up to 70% on world-class dental
                 treatments with our internationally trained specialists.
               </p>
             </div>
@@ -23,15 +23,19 @@ export function Hero() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
+                <span className="text-foreground">Member of the American Dental Association - ADA standard clinic</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
                 <span className="text-foreground">ISO-certified clinic with cutting-edge technology</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
-                <span className="text-foreground">International dentists with 15+ years experience</span>
+                <span className="text-foreground">International dentists with 10+ years experience - fluent in English</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-primary" />
-                <span className="text-foreground">Lifetime warranty on all dental implants</span>
+                <span className="text-foreground">Lifetime warranty on dental implants</span>
               </div>
             </div>
 

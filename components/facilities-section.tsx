@@ -13,7 +13,7 @@ const facilities = [
     title: "Advanced Treatment Rooms",
     description:
       "State-of-the-art treatment rooms equipped with the latest dental technology and comfortable seating for patient relaxation.",
-    image: "/modern-dental-treatment-room-with-advanced-equipme.jpg",
+    image: "new/modern-dental-treatment-room.jpg",
     icon: Building2,
     features: ["Ergonomic Dental Chairs", "LED Lighting", "Entertainment Systems"],
   },
@@ -22,7 +22,7 @@ const facilities = [
     title: "3D Imaging & Diagnostics",
     description:
       "Cutting-edge CBCT and 3D imaging technology for precise diagnosis and treatment planning with minimal radiation exposure.",
-    image: "/dental-3d-imaging-equipment-cbct-scanner.jpg",
+    image: "/new/conebeam-ct.jpg",
     icon: MonitorCheck,
     features: ["CBCT Scanner", "Digital X-rays", "Intraoral Cameras"],
   },
@@ -31,7 +31,7 @@ const facilities = [
     title: "Sterile Surgical Suite",
     description:
       "Hospital-grade sterilization facility ensuring the highest standards of infection control and patient safety.",
-    image: "/sterile-dental-surgery-room-with-medical-equipment.jpg",
+    image: "/new/sterile-dental-surgery-room-with-medical-equipment.jpg",
     icon: Shield,
     features: ["HEPA Filtration", "Autoclave Systems", "UV Sterilization"],
   },
@@ -46,22 +46,49 @@ const facilities = [
   },
   {
     id: 5,
-    title: "Comfortable Waiting Area",
+    title: "Digital Dental WorkFlow",
     description:
-      "Relaxing reception area with complimentary refreshments, Wi-Fi, and entertainment to make your visit pleasant.",
-    image: "/modern-comfortable-dental-clinic-waiting-room.jpg",
+      "Fully digital workflow from diagnosis to treatment, enhancing accuracy and patient experience with modern technology.",
+    image: "/new/modern-oral-scanner-at-eden-dental.jpg",
     icon: Users,
-    features: ["Free Wi-Fi", "Refreshments", "Comfortable Seating"],
+    features: ["iTero Scanner", "Digital Impressions", "AI Treatment Planning"],
   },
   {
     id: 6,
     title: "Recovery & Consultation Rooms",
     description:
       "Private consultation and recovery rooms where patients can rest comfortably and discuss treatment plans with doctors.",
-    image: "/private-dental-consultation-room-modern-design.jpg",
+    image: "/new/rooms.jpg",
     icon: Sparkles,
     features: ["Private Rooms", "Climate Control", "Post-Op Care"],
   },
+  {
+    id: 7,
+    title: "Oral Scanner Technology",
+    description:
+      "Latest oral scanner technology for precise digital impressions, improving comfort and accuracy in dental restorations.",
+    image: "/new/scanners.jpg",
+    icon: Users,
+    features: ["1 day crowns", "Invisalign Outcome", "Digital Smile Design"],
+  },
+  {
+    id: 8,
+    title: "GBT Therapy - Airflow®",
+    description:
+      "Guided Biofilm Therapy (GBT) using Airflow® technology for gentle and effective professional teeth cleaning.",
+    image: "/new/GBT-therapy.jpg",
+    icon: Sparkles,
+    features: ["Guided Biofilm Therapy", "Airflow® Technology", "Professional Teeth Cleaning"],
+  },
+  {
+    id: 9,
+    title: "Dental Laser Treatments",
+    description:
+      "Advanced dental laser technology for precise, minimally invasive treatments that promote faster healing and patient comfort.",
+    image: "/new/dental-laser.jpg",
+    icon: Building2,
+    features: ["Laser Dentistry", "Minimally Invasive", "Faster Healing"],
+  }
 ]
 
 export function FacilitiesSection() {

@@ -67,7 +67,7 @@ export function WhyVietnam() {
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           <div className="text-center">
-            <p className="text-4xl font-bold text-primary">15+</p>
+            <p className="text-4xl font-bold text-primary">10+</p>
             <p className="mt-2 text-sm text-muted-foreground">Years of Excellence</p>
           </div>
           <div className="text-center">

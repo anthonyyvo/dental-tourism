@@ -37,11 +37,11 @@ export function TeamSection() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl bg-card p-6 text-center shadow-md">
-            <p className="text-3xl font-bold text-primary">25+</p>
-            <p className="mt-2 text-sm text-muted-foreground">Dental Experts</p>
+            <p className="text-3xl font-bold text-primary">2</p>
+            <p className="mt-2 text-sm text-muted-foreground">Ho Chi Minh Branches</p>
           </div>
           <div className="rounded-xl bg-card p-6 text-center shadow-md">
-            <p className="text-3xl font-bold text-primary">15+</p>
+            <p className="text-3xl font-bold text-primary">10+</p>
             <p className="mt-2 text-sm text-muted-foreground">Years Experience</p>
           </div>
           <div className="rounded-xl bg-card p-6 text-center shadow-md">
