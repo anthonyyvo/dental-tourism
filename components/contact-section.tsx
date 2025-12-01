@@ -84,16 +84,44 @@ export function ContactSection() {
         return
       }
 
-      // Send data to Subiz
-      if (window.subiz) {
-        window.subiz("submitForm", "cpsigilaccofaeomohlwl", [
-          { key: "fullname", value: fullName },
-          { key: "email", value: formData.email },
-          { key: "phones", value: formData.phone },
-          { key: "message", value: formData.message },
-          { key: "location", value: currentPage },
-        ])
+      // Send data to API
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
+      const widgetKey = process.env.NEXT_PUBLIC_WIDGET_KEY || ""
+      
+      const apiResponse = await fetch(`${apiUrl}/api/webform/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-dcrm-key": widgetKey,
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          location: currentPage,
+          timestamp: new Date().toISOString(),
+        }),
+      })
+
+      if (!apiResponse.ok) {
+        throw new Error(`API request failed with status ${apiResponse.status}`)
       }
+
+      const result = await apiResponse.json()
+      console.log("Form submitted successfully:", result)
+
+      // Send data to Subiz
+      // if (window.subiz) {
+      //   window.subiz("submitForm", "cpsigilaccofaeomohlwl", [
+      //     { key: "fullname", value: fullName },
+      //     { key: "email", value: formData.email },
+      //     { key: "phones", value: formData.phone },
+      //     { key: "message", value: formData.message },
+      //     { key: "location", value: currentPage },
+      //   ])
+      // }
 
       setSubmitStatus("success")
       // Reset form
