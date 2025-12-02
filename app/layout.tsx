@@ -40,6 +40,21 @@ export default function RootLayout({
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17493940715"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17493940715');
+          `}
+        </Script>
+      </head>
       <body
         className={`${inter.className} font-sans antialiased`}
         suppressHydrationWarning
