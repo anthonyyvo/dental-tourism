@@ -123,3 +123,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Messenger button - thu hút sự chú ý */
+@keyframes messenger-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 25px -5px rgb(8 102 255 / 0.3), 0 8px 10px -6px rgb(8 102 255 / 0.2);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 10px 40px -5px rgb(8 102 255 / 0.5), 0 8px 20px -6px rgb(8 102 255 / 0.3);
+  }
+}
+
+.messenger-btn-animate {
+  animation: messenger-pulse 2s ease-in-out infinite;
+}
+
+.messenger-btn-animate:hover {
+  animation: none;
+}

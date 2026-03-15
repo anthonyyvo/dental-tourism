@@ -2,20 +2,31 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+const RATE_LIMIT_COOLDOWN_MS = 5000
+const RATE_LIMIT_MAX_SUBMITS = 3
+const RATE_LIMIT_RESET_MS = 300000
+
 export function PromotionPopup() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [isRateLimited, setIsRateLimited] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
   })
+  const lastSubmitTime = useRef<number>(0)
+  const submitCount = useRef<number>(0)
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const closeAfterSuccessRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -23,31 +34,75 @@ export function PromotionPopup() {
 
   useEffect(() => {
     if (!isMounted) return
-    // Show popup after 5 seconds on initial load
-    const initialTimer = setTimeout(() => {
-      setIsOpen(true)
-    }, 5000)
-
-    // Then show popup every 60 seconds
-    const recurringTimer = setInterval(() => {
-      setIsOpen(true)
-    }, 60000)
-
+    const initialTimer = setTimeout(() => setIsOpen(true), 5000)
+    const recurringTimer = setInterval(() => setIsOpen(true), 60000)
     return () => {
       clearTimeout(initialTimer)
       clearInterval(recurringTimer)
     }
-  }, [])
+  }, [isMounted])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("[v0] Promotion form submitted:", formData)
-    // Handle form submission here
-    setIsOpen(false)
-    setFormData({ name: "", email: "", phone: "" })
+
+    const now = Date.now()
+    const timeSinceLastSubmit = now - lastSubmitTime.current
+
+    if (timeSinceLastSubmit < RATE_LIMIT_COOLDOWN_MS) {
+      setSubmitStatus("error")
+      setIsRateLimited(true)
+      return
+    }
+
+    submitCount.current += 1
+    if (submitCount.current > RATE_LIMIT_MAX_SUBMITS) {
+      setSubmitStatus("error")
+      setIsRateLimited(true)
+      return
+    }
+
+    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
+    resetTimeoutRef.current = setTimeout(() => {
+      submitCount.current = 0
+    }, RATE_LIMIT_RESET_MS)
+
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
+    setIsRateLimited(false)
+    lastSubmitTime.current = now
+
+    try {
+      const response = await fetch("/api/promotion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || "Request failed")
+      }
+
+      setSubmitStatus("success")
+      setFormData({ name: "", email: "", phone: "" })
+
+      if (closeAfterSuccessRef.current) clearTimeout(closeAfterSuccessRef.current)
+      closeAfterSuccessRef.current = setTimeout(() => {
+        setIsOpen(false)
+      }, 2000)
+    } catch (error) {
+      console.error("[PromotionPopup] Submit error:", error)
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleClose = () => {
+    if (closeAfterSuccessRef.current) {
+      clearTimeout(closeAfterSuccessRef.current)
+    }
     setIsOpen(false)
   }
 
@@ -127,11 +182,24 @@ export function PromotionPopup() {
             </div>
 
             <div className="pt-2 space-y-3">
+              {submitStatus === "success" && (
+                <div className="rounded-lg bg-green-50 p-4 text-sm text-green-800">
+                  Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm với ưu đãi 20%.
+                </div>
+              )}
+              {submitStatus === "error" && (
+                <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800">
+                  {isRateLimited
+                    ? "Vui lòng đợi vài giây trước khi gửi lại. Tối đa 3 lần trong 5 phút."
+                    : "Có lỗi xảy ra. Vui lòng kiểm tra thông tin và thử lại."}
+                </div>
+              )}
               <Button
                 type="submit"
-                className="w-full h-12 bg-[#70be4b] hover:bg-[#00aa55] text-white font-semibold text-lg transition-colors"
+                disabled={isSubmitting || isRateLimited}
+                className="w-full h-12 bg-[#70be4b] hover:bg-[#00aa55] text-white font-semibold text-lg transition-colors disabled:opacity-70"
               >
-                Claim Your 20% Discount
+                {isSubmitting ? "Đang gửi..." : "Claim Your 20% Discount"}
               </Button>
 
               <p className="text-xs text-center text-gray-500">

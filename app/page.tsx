@@ -14,6 +14,7 @@ import { Footer } from "@/components/footer"
 import { PromotionPopup } from "@/components/promotion-popup"
 import { FacilitiesSection } from "@/components/facilities-section"
 import { ClientOnly } from "@/components/client-only"
+import { MessengerFloatingButton } from "@/components/messenger-floating-button"
 
 export default function Home() {
   return (
@@ -36,6 +37,7 @@ export default function Home() {
       <Footer />
       <ClientOnly>
         <PromotionPopup />
+        <MessengerFloatingButton />
       </ClientOnly>
     </div>
   )
