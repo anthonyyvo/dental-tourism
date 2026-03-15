@@ -137,10 +137,51 @@
   }
 }
 
+/* Vòng toả ra - radiating ring */
+@keyframes messenger-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
 .messenger-btn-animate {
   animation: messenger-pulse 2s ease-in-out infinite;
 }
 
 .messenger-btn-animate:hover {
   animation: none;
+}
+
+.messenger-btn-wrapper {
+  overflow: visible;
+}
+
+.messenger-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgb(8 102 255 / 0.5);
+  animation: messenger-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+
+.messenger-ring:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.messenger-ring:nth-child(2) {
+  animation-delay: 0.75s;
+}
+
+.messenger-ring:nth-child(3) {
+  animation-delay: 1.5s;
+}
+
+.messenger-btn-wrapper:hover .messenger-ring {
+  animation-play-state: paused;
 }
