@@ -78,10 +78,11 @@ export function PromotionPopup() {
         body: JSON.stringify(formData),
       })
 
-      const result = await response.json()
+      const result = await response.json().catch(() => ({}))
+      const message = (result as { message?: string }).message
 
       if (!response.ok) {
-        throw new Error(result.message || "Request failed")
+        throw new Error(message || "Không thể gửi. Vui lòng thử lại.")
       }
 
       setSubmitStatus("success")
@@ -130,7 +131,7 @@ export function PromotionPopup() {
             <div className="inline-block bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-medium mb-3">
               Limited Time Offer
             </div>
-            <h2 className="text-3xl font-bold mb-2">Get 20% OFF Your First Visit!</h2>
+            <h2 className="text-3xl font-bold mb-2">Get 10% OFF Your First Visit!</h2>
             <p className="text-white/90 text-lg">Transform your smile with world-class dental care in Vietnam</p>
           </div>
 
@@ -184,7 +185,7 @@ export function PromotionPopup() {
             <div className="pt-2 space-y-3">
               {submitStatus === "success" && (
                 <div className="rounded-lg bg-green-50 p-4 text-sm text-green-800">
-                  Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm với ưu đãi 20%.
+                  Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm với ưu đãi 10%.
                 </div>
               )}
               {submitStatus === "error" && (
@@ -199,7 +200,7 @@ export function PromotionPopup() {
                 disabled={isSubmitting || isRateLimited}
                 className="w-full h-12 bg-[#70be4b] hover:bg-[#00aa55] text-white font-semibold text-lg transition-colors disabled:opacity-70"
               >
-                {isSubmitting ? "Đang gửi..." : "Claim Your 20% Discount"}
+                {isSubmitting ? "Đang gửi..." : "Claim Your 10% Discount"}
               </Button>
 
               <p className="text-xs text-center text-gray-500">
@@ -214,6 +215,10 @@ export function PromotionPopup() {
               <li className="flex items-start gap-2">
                 <span className="text-[#70be4b] font-bold">✓</span>
                 <span>Free consultation with our specialists</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#70be4b] font-bold">✓</span>
+                <span>Free 3D scans for tooth decay detection & full mouth X-ray</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#70be4b] font-bold">✓</span>

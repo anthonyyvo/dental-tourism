@@ -6,7 +6,7 @@ const MESSENGER_LINK = "https://m.me/901053259982588"
 
 export function MessengerFloatingButton() {
   return (
-    <div className="messenger-btn-wrapper fixed bottom-12 right-6 z-40 size-14">
+    <div className="messenger-btn-wrapper relative size-14 shrink-0">
       {/* Vòng toả ra */}
       <span className="messenger-ring" aria-hidden />
       <span className="messenger-ring" aria-hidden />

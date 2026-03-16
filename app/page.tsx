@@ -14,11 +14,11 @@ import { Footer } from "@/components/footer"
 import { PromotionPopup } from "@/components/promotion-popup"
 import { FacilitiesSection } from "@/components/facilities-section"
 import { ClientOnly } from "@/components/client-only"
-import { MessengerFloatingButton } from "@/components/messenger-floating-button"
+import { ChatFloatingButtons } from "@/components/chat-floating-buttons"
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       <Header />
       <main>
         <Hero />
@@ -37,7 +37,7 @@ export default function Home() {
       <Footer />
       <ClientOnly>
         <PromotionPopup />
-        <MessengerFloatingButton />
+        <ChatFloatingButtons />
       </ClientOnly>
     </div>
   )

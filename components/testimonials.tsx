@@ -1,6 +1,23 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Star } from "lucide-react"
+import { Star, ExternalLink } from "lucide-react"
 import Image from "next/image"
+
+const BRANCHES = [
+  {
+    url: "https://share.google/fAIrLzVjZjB3a6iTr",
+    label: "Eden Dental Clinic - District 1",
+    image: "/eden01.png",
+    rating: "5.0",
+    reviews: "753",
+  },
+  {
+    url: "https://share.google/v6zHkwHOrFiOs5vFG",
+    label: "Eden Dental Clinic - District 7",
+    image: "/eden02.png",
+    rating: "5.0",
+    reviews: "531",
+  },
+] as const
 
 const testimonials = [
   {
@@ -65,6 +82,51 @@ export function Testimonials() {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="mt-16">
+          <p className="mb-8 text-center text-lg font-medium text-foreground">
+            See our real 5-star reviews on Google
+          </p>
+          <div className="grid gap-8 md:grid-cols-2">
+            {BRANCHES.map((branch) => (
+              <Card key={branch.url} className="overflow-hidden border-2">
+                <div className="relative aspect-4/3 overflow-hidden bg-muted">
+                  <Image
+                    src={branch.image}
+                    alt={branch.label}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                <CardContent className="p-4">
+                  <p className="mb-2 font-semibold text-foreground">{branch.label}</p>
+                  <div className="mb-3 flex items-center gap-2">
+                    <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+                    <span className="text-sm font-medium text-foreground">
+                      {branch.rating} ({branch.reviews} reviews)
+                    </span>
+                  </div>
+                  <a
+                    href={branch.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-primary bg-primary/5 px-4 py-3 font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  >
+                    <Image
+                      src="/google-color-svgrepo-com.svg"
+                      alt="Google"
+                      width={24}
+                      height={24}
+                    />
+                    Open in Google Maps
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </section>

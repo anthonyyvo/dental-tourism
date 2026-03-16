@@ -24,10 +24,11 @@ export function ContactSection() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const [isRateLimited, setIsRateLimited] = useState(false)
   const lastSubmitTime = useRef<number>(0)
   const submitCount = useRef<number>(0)
-  const resetTimeoutRef = useRef<NodeJS.Timeout>()
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,55 +63,77 @@ export function ContactSection() {
     
     setIsSubmitting(true)
     setSubmitStatus("idle")
+    setErrorMessage("")
     setIsRateLimited(false)
     lastSubmitTime.current = now
 
     try {
-      const fullName = `${formData.firstName} ${formData.lastName}`.trim()
       const currentPage = window.location.href
 
       // Basic validation
-      if (!formData.firstName || !formData.email || !formData.phone) {
+      if (!formData.firstName?.trim() || !formData.email?.trim() || !formData.phone?.trim()) {
         setSubmitStatus("error")
+        setErrorMessage("Vui lòng điền đầy đủ Họ, Email và Số điện thoại.")
         setIsSubmitting(false)
         return
       }
 
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(formData.email)) {
+      if (!emailRegex.test(formData.email.trim())) {
         setSubmitStatus("error")
+        setErrorMessage("Email không hợp lệ. Vui lòng kiểm tra lại.")
         setIsSubmitting(false)
         return
       }
 
-      // Send data to API
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
-      const widgetKey = process.env.NEXT_PUBLIC_WIDGET_KEY || ""
-      
-      const apiResponse = await fetch(`${apiUrl}/api/webform/submit`, {
+      // Gửi email thông báo qua SMTP
+      const contactResponse = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-dcrm-key": widgetKey,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          location: currentPage,
-          timestamp: new Date().toISOString(),
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
         }),
       })
 
-      if (!apiResponse.ok) {
-        throw new Error(`API request failed with status ${apiResponse.status}`)
+      const contactResult = await contactResponse.json().catch(() => ({}))
+      if (!contactResponse.ok) {
+        throw new Error(
+          (contactResult as { message?: string }).message || "Không thể gửi thông báo. Vui lòng thử lại sau."
+        )
       }
 
-      const result = await apiResponse.json()
-      console.log("Form submitted successfully:", result)
+      // Gửi data đến CRM API (nếu có cấu hình) - không block flow nếu fail
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
+      const widgetKey = process.env.NEXT_PUBLIC_WIDGET_KEY || ""
+      try {
+        const apiResponse = await fetch(`${apiUrl}/api/webform/submit`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-dcrm-key": widgetKey,
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            location: currentPage,
+            timestamp: new Date().toISOString(),
+          }),
+        })
+        if (!apiResponse.ok) {
+          console.warn("CRM API failed:", apiResponse.status)
+        }
+      } catch (crmError) {
+        // CRM không chạy hoặc network error - bỏ qua, email đã gửi thành công
+        console.warn("CRM API unreachable:", crmError)
+      }
 
       // Send data to Subiz
       // if (window.subiz) {
@@ -135,6 +158,15 @@ export function ContactSection() {
     } catch (error) {
       console.error("Error submitting form:", error)
       setSubmitStatus("error")
+      const isNetworkError =
+        error instanceof TypeError && error.message === "Failed to fetch"
+      setErrorMessage(
+        isNetworkError
+          ? "Không thể kết nối. Vui lòng kiểm tra mạng và thử lại."
+          : error instanceof Error
+            ? error.message
+            : "Đã xảy ra lỗi. Vui lòng thử lại sau."
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -239,8 +271,8 @@ export function ContactSection() {
                 {submitStatus === "error" && (
                   <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800">
                     {isRateLimited
-                      ? "Please wait a moment before submitting again. Maximum 3 submissions per 5 minutes."
-                      : "Please check that all required fields are filled correctly and try again."}
+                      ? "Vui lòng đợi vài giây trước khi gửi lại. Tối đa 3 lần trong 5 phút."
+                      : errorMessage || "Đã xảy ra lỗi. Vui lòng thử lại sau."}
                   </div>
                 )}
                 <Button type="submit" size="lg" className="w-full" disabled={isSubmitting || isRateLimited}>
@@ -258,7 +290,7 @@ export function ContactSection() {
               <h3 className="mb-6 text-2xl font-bold text-foreground">Get In Touch</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <Phone className="h-6 w-6 text-primary" />
                   </div>
                   <div>
@@ -268,7 +300,7 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <Mail className="h-6 w-6 text-primary" />
                   </div>
                   <div>
@@ -279,7 +311,7 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <MapPin className="h-6 w-6 text-primary" />
                   </div>
                   <div>
@@ -289,7 +321,7 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <MapPin className="h-6 w-6 text-primary" />
                   </div>
                   <div>
