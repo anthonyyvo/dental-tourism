@@ -196,6 +196,7 @@ export function PromotionPopup() {
                 </div>
               )}
               <Button
+                id="promotion-btn"
                 type="submit"
                 disabled={isSubmitting || isRateLimited}
                 className="w-full h-12 bg-[#70be4b] hover:bg-[#00aa55] text-white font-semibold text-lg transition-colors disabled:opacity-70"

@@ -13,6 +13,7 @@ export function MessengerFloatingButton() {
       <span className="messenger-ring" aria-hidden />
       <a
         href={MESSENGER_LINK}
+        id="messenger-btn"
         target="_blank"
         rel="noopener noreferrer"
         className="messenger-btn-animate relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-[#0866FF] shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#0866FF] focus:ring-offset-2"

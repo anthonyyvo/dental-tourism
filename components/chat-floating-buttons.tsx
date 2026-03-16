@@ -19,6 +19,7 @@ export function ChatFloatingButtons() {
         <div className="flex w-full items-center justify-around border-t border-border bg-background/95 px-4 pb-[env(safe-area-inset-bottom)] pt-3 backdrop-blur supports-backdrop-filter:bg-background/80">
           <a
             href={WHATSAPP_LINK}
+            id="whatsapp-btn-mobile"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-1 flex-col items-center gap-1 text-[#25D366] transition-opacity hover:opacity-80 active:opacity-70"
@@ -35,6 +36,7 @@ export function ChatFloatingButtons() {
           </a>
           <a
             href={MESSENGER_LINK}
+            id="messenger-btn-mobile"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-1 flex-col items-center gap-1 text-[#0866FF] transition-opacity hover:opacity-80 active:opacity-70"

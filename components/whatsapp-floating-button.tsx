@@ -13,6 +13,7 @@ export function WhatsAppFloatingButton() {
       <span className="whatsapp-ring" aria-hidden />
       <a
         href={WHATSAPP_LINK}
+        id="whatsapp-btn"
         target="_blank"
         rel="noopener noreferrer"
         className="whatsapp-btn-animate relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2"

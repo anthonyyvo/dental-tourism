@@ -275,7 +275,7 @@ export function ContactSection() {
                       : errorMessage || "Đã xảy ra lỗi. Vui lòng thử lại sau."}
                   </div>
                 )}
-                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting || isRateLimited}>
+                <Button id="contact-btn-main" type="submit" size="lg" className="w-full" disabled={isSubmitting || isRateLimited}>
                   {isSubmitting ? "Sending..." : "Send Free Consultation Request"}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
