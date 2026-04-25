@@ -97,6 +97,7 @@ export function ContactSection() {
           email: formData.email.trim(),
           phone: formData.phone.trim(),
           message: formData.message.trim(),
+          pageUrl: currentPage,
         }),
       })
 
@@ -105,34 +106,6 @@ export function ContactSection() {
         throw new Error(
           (contactResult as { message?: string }).message || "Không thể gửi thông báo. Vui lòng thử lại sau."
         )
-      }
-
-      // Gửi data đến CRM API (nếu có cấu hình) - không block flow nếu fail
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
-      const widgetKey = process.env.NEXT_PUBLIC_WIDGET_KEY || ""
-      try {
-        const apiResponse = await fetch(`${apiUrl}/api/webform/submit`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-dcrm-key": widgetKey,
-          },
-          body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message,
-            location: currentPage,
-            timestamp: new Date().toISOString(),
-          }),
-        })
-        if (!apiResponse.ok) {
-          console.warn("CRM API failed:", apiResponse.status)
-        }
-      } catch (crmError) {
-        // CRM không chạy hoặc network error - bỏ qua, email đã gửi thành công
-        console.warn("CRM API unreachable:", crmError)
       }
 
       // Send data to Subiz

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
+import { sendLeadToCrm, CRM_LEAD_SOURCE } from "@/lib/crm"
+import { getNotifyEmailList, EMAIL_REGEX } from "@/lib/notify-emails"
 
 // ==============================
 // TYPES
@@ -7,17 +9,16 @@ import nodemailer from "nodemailer"
 
 interface ContactRequestBody {
   firstName: string
-  lastName: string
+  lastName?: string
   email: string
   phone: string
   message?: string
+  pageUrl?: string
 }
 
 // ==============================
 // VALIDATION
 // ==============================
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function validateBody(body: unknown): body is ContactRequestBody {
   if (!body || typeof body !== "object") return false
@@ -30,7 +31,8 @@ function validateBody(body: unknown): body is ContactRequestBody {
     typeof b.phone === "string" &&
     b.phone.trim().length > 0 &&
     (b.lastName === undefined || typeof b.lastName === "string") &&
-    (b.message === undefined || typeof b.message === "string")
+    (b.message === undefined || typeof b.message === "string") &&
+    (b.pageUrl === undefined || typeof b.pageUrl === "string")
   )
 }
 
@@ -51,15 +53,22 @@ export async function POST(request: Request) {
 
     const smtpUser = process.env.SMTP_USER
     const smtpPass = process.env.SMTP_PASS
-    const notifyEmail = process.env.PROMOTION_NOTIFY_EMAIL
+    const notifyEmails = getNotifyEmailList()
 
-    if (!smtpUser || !smtpPass || !notifyEmail) {
-      console.error("[Contact API] Missing SMTP env vars: SMTP_USER, SMTP_PASS, PROMOTION_NOTIFY_EMAIL")
+    if (!smtpUser || !smtpPass || notifyEmails.length === 0) {
+      console.error(
+        "[Contact API] Missing/invalid SMTP env: SMTP_USER, SMTP_PASS, PROMOTION_NOTIFY_EMAIL (một hoặc nhiều email hợp lệ)"
+      )
       return NextResponse.json(
         { success: false, message: "Chưa cấu hình email. Vui lòng liên hệ quản trị viên." },
         { status: 500 }
       )
     }
+
+    const firstName = body.firstName.trim()
+    const lastName = body.lastName?.trim() || ""
+    const fullName = `${firstName} ${lastName}`.trim()
+    const pageUrl = body.pageUrl?.trim() || ""
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -69,7 +78,6 @@ export async function POST(request: Request) {
       },
     })
 
-    const fullName = `${body.firstName.trim()} ${body.lastName?.trim() || ""}`.trim()
     const timestamp = new Date().toLocaleString("vi-VN", {
       dateStyle: "medium",
       timeStyle: "medium",
@@ -82,15 +90,30 @@ export async function POST(request: Request) {
       <p><strong>Email:</strong> ${body.email.trim()}</p>
       <p><strong>Số điện thoại:</strong> ${body.phone.trim()}</p>
       <p><strong>Tin nhắn:</strong> ${body.message?.trim() || "(Không có)"}</p>
+      <p><strong>Trang gửi:</strong> ${pageUrl || "(Không có)"}</p>
       <p><strong>Thời gian:</strong> ${timestamp}</p>
     `
 
     await transporter.sendMail({
       from: smtpUser,
-      to: notifyEmail,
+      to: notifyEmails,
       subject,
       html,
     })
+
+    const crm = await sendLeadToCrm({
+      fullName,
+      firstName,
+      lastName: lastName || undefined,
+      email: body.email.trim(),
+      phone: body.phone.trim(),
+      source: CRM_LEAD_SOURCE,
+      notes: body.message?.trim() || "",
+      page_url: pageUrl,
+    })
+    if (!crm.ok) {
+      console.error("[Contact API] CRM sync:", crm.error)
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

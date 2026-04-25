@@ -13,20 +13,7 @@ export const metadata: Metadata = {
     "Experience world-class dental care in Vietnam. Specializing in dental implants, veneers, and full mouth smile design at affordable prices.",
   generator: "Eden Dental Clinic",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.jpg",
-        type: "image/jpeg",
-      },
-    ],
+    icon: [{ url: "/eden.svg", type: "image/svg+xml" }],
     apple: "/apple-icon.png",
   },
 };

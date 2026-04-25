@@ -75,7 +75,10 @@ export function PromotionPopup() {
       const response = await fetch("/api/promotion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          pageUrl: typeof window !== "undefined" ? window.location.href : "",
+        }),
       })
 
       const result = await response.json().catch(() => ({}))
