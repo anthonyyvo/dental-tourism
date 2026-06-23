@@ -8,6 +8,10 @@ const WHATSAPP_PHONE = "84909979042"
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_PHONE}`
 const MESSENGER_LINK = "https://m.me/901053259982588"
 
+// Desktop: Messenger cao hơn WhatsApp để tránh Eden CRM widget góc phải
+const DESKTOP_WHATSAPP_BOTTOM = "bottom-[7.25rem]"
+const DESKTOP_MESSENGER_BOTTOM = "bottom-[11.5rem]"
+
 export function ChatFloatingButtons() {
   return (
     <>
@@ -55,8 +59,14 @@ export function ChatFloatingButtons() {
       </nav>
 
       {/* Desktop: Floating buttons */}
-      <div className="fixed bottom-12 right-6 z-40 hidden flex-col gap-3 md:flex">
+      <div
+        className={`fixed ${DESKTOP_WHATSAPP_BOTTOM} right-6 z-40 hidden md:block`}
+      >
         <WhatsAppFloatingButton />
+      </div>
+      <div
+        className={`fixed ${DESKTOP_MESSENGER_BOTTOM} right-6 z-40 hidden md:block`}
+      >
         <MessengerFloatingButton />
       </div>
     </>
